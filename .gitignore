@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python / Node
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+node_modules/
+frontend/dist/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+infra/.build/
+
+# Telegram bot runtime data (SQLite, logs)
+backend/telegram_bot/data/
+*.db
+
+# Case answers (rubrics, generators, reference solutions) never go into this public repo.
+# They live in the private repository internship-simulator-author.
+cases/*/author/
+docs/research.md
+
+.DS_Store

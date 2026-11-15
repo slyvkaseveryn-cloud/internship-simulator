@@ -1,0 +1,12 @@
+[
+  {"id": "analytics", "emoji": "📊", "title": "Продуктовий / дата-аналітик", "status": "live",
+   "about": "Розбираєшся в сирих даних, знаходиш причину й даєш рекомендацію менеджеру."},
+  {"id": "ba", "emoji": "🧩", "title": "Бізнес-аналітик", "status": "live",
+   "about": "Збираєш вимоги від людей, які хочуть різного, описуєш процес і пишеш user stories."},
+  {"id": "qa", "emoji": "🐞", "title": "QA-тестувальник", "status": "live",
+   "about": "Шукаєш баги за специфікацією, пишеш баг-репорти й тест-кейси."},
+  {"id": "marketing", "emoji": "📣", "title": "Маркетолог", "status": "soon"},
+  {"id": "support", "emoji": "💬", "title": "Customer Support", "status": "soon"},
+  {"id": "pm", "emoji": "🗂", "title": "Project / Product Manager", "status": "soon"},
+  {"id": "hr", "emoji": "🤝", "title": "HR / рекрутер", "status": "soon"}
+]

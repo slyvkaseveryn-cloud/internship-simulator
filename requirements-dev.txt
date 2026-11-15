@@ -1,0 +1,4 @@
+-r backend/telegram_bot/requirements.txt
+pytest==9.2.0
+ruff==0.17.5
+boto3==1.44.3
