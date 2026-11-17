@@ -39,6 +39,12 @@ variable "budget_usd" {
   default = "1.0"
 }
 
+variable "github_sub_prefix" {
+  description = "OIDC subject prefix of the repository. GitHub signs it with immutable owner/repo IDs: gh api repos/OWNER/REPO/actions/oidc/customization/sub"
+  type        = string
+  default     = "repo:slyvkaseveryn-cloud@246843047/internship-simulator@1461168690"
+}
+
 variable "github_repository" {
   description = "owner/name of the GitHub repository whose workflows may deploy"
   type        = string

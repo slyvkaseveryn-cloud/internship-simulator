@@ -14,7 +14,7 @@ test:
 lint:
 	.venv/bin/ruff check backend
 	cd frontend && npm run lint
-	terraform -chdir=infra fmt -check -recursive
+	@if command -v terraform >/dev/null; then terraform -chdir=infra fmt -check -recursive; else echo "terraform not installed: skipping (CI checks it)"; fi
 
 check: lint test
 	cd frontend && npm run build
