@@ -24,6 +24,16 @@ All of this is deployed and checked end-to-end on a 375px phone viewport with th
 | CI on every pull request, deploy on merge to `main` | GitHub → Actions |
 | Telegram bot (earlier prototype, separate data) | [@intern_sim_bot](https://t.me/intern_sim_bot) |
 
+## Changes after user feedback
+
+From the first four feedback entries (2026-11-18). Quotes are from real entries; authors are not named.
+
+| Feedback | What we changed | PR |
+|---|---|---|
+| «страшно натискати «Беру кейс», бо потім одразу йдуть три дні» | Next to «Беру кейс»: the brief and files are visible without taking the case; the timer starts only after the click | [#23](https://github.com/slyvkaseveryn-cloud/internship-simulator/pull/23) |
+| «не знайшла, що буде, якщо я не встигну за три дні» | Under the deadline: missing it blocks nothing, late work is reviewed as usual | [#23](https://github.com/slyvkaseveryn-cloud/internship-simulator/pull/23) |
+| All four entries put everything into «Що сподобалось», «Що заважало» stayed empty | The two fields look different (green / amber), each with a hint and an example | [#23](https://github.com/slyvkaseveryn-cloud/internship-simulator/pull/23) |
+
 ## Who does what (until Thursday)
 
 | Issue | Task | Owner | State |
