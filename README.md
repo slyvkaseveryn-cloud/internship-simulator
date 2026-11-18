@@ -98,6 +98,19 @@ aws cognito-idp admin-add-user-to-group --region eu-central-1 \
 
 They need to sign in again to get the new role.
 
+## Metrics for the report
+
+Every step of the user's path is an event in DynamoDB (`opened`, `signed_up`, `profession_chosen`,
+`case_viewed`, `case_taken`, `submitted`, `review_sent`, `feedback_sent`, `donate_clicked`). The numbers:
+
+```bash
+.venv/bin/python scripts/metrics.py --csv docs/report/data   # needs the owner's AWS read access
+```
+
+It prints the funnel in people (not clicks) and writes `funnel.csv`, `feedback.csv` and `events.csv`. The team
+(Cognito group `reviewers`), test accounts (`@example.com`, `e2e-…`, `+test`) and any `--exclude <email>` are
+left out, together with their anonymous visits. The CSVs contain emails: do not commit them to the public repo.
+
 ## Add a case
 
 1. Create `cases/NN-name/candidate/` with `brief.md` (the manager's email, then `---`, then the data

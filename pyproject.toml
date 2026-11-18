@@ -7,4 +7,4 @@ select = ["E", "F", "I", "B", "UP"]
 ignore = ["E501"]
 
 [tool.pytest.ini_options]
-testpaths = ["backend/api/tests", "backend/telegram_bot/tests"]
+testpaths = ["backend/api/tests", "backend/telegram_bot/tests", "scripts/tests"]

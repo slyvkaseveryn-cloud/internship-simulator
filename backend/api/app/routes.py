@@ -227,3 +227,18 @@ def feedback(body, user, anon):
     db.table().put_item(Item=item)
     events.log("feedback_sent", user=user["sub"], case_id=case_id, value=str(realism))
     return 201, {"ok": True}
+
+
+# --- anonymous events (before sign-in) ----------------------------------------------------
+
+ANON_RE = re.compile(r"^[A-Za-z0-9-]{8,64}$")
+
+
+@route("POST", "/api/public/events")
+def public_event(body, user, anon):
+    if body.get("event") not in events.PUBLIC_EVENTS:
+        raise HttpError(400, "invalid_event")
+    if not anon or not ANON_RE.match(anon):
+        raise HttpError(400, "invalid_anon")
+    events.log(body["event"], anon=anon)
+    return 200, {"ok": True}
