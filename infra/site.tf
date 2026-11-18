@@ -125,6 +125,7 @@ resource "aws_s3_object" "config" {
     region     = var.region
     userPoolId = aws_cognito_user_pool.main.id
     clientId   = aws_cognito_user_pool_client.web.id
+    donateUrl  = var.donate_url
   })
 }
 

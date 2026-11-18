@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api, ApiError, post } from '../api'
 import { formatDate, STATUS_LABEL, type Attempt } from '../attempts'
 import { daysWord, type Case } from '../cases'
+import Donate from '../Donate'
 
 /** The "take the case → submit work" block on a case page. */
 export default function CaseWork({ c, onAttempt }: { c: Case; onAttempt?: (a: Attempt | null) => void }) {
@@ -67,6 +68,8 @@ export default function CaseWork({ c, onAttempt }: { c: Case; onAttempt?: (a: At
         <SubmitForm caseId={c.id} initial={attempt.submission} onDone={(a) => { setAttempt(a); setEditing(false) }}
           onCancel={editing ? () => setEditing(false) : undefined} />
       )}
+
+      {attempt.status === 'reviewed' && <Donate caseId={c.id} />}
 
       {attempt.status !== 'taken' && (
         <p className="small">

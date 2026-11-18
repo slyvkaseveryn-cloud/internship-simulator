@@ -1,4 +1,4 @@
-export type AppConfig = { region: string; userPoolId: string; clientId: string }
+export type AppConfig = { region: string; userPoolId: string; clientId: string; donateUrl?: string }
 
 let cached: Promise<AppConfig> | null = null
 

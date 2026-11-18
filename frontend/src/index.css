@@ -90,3 +90,5 @@ fieldset.field legend { font-weight: 500; margin-bottom: 6px; padding: 0; }
 .pill.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .pill:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 .feedback-cta { margin: 0 0 16px; }
+.donate { border-left: 4px solid var(--ok); }
+.donate p { margin: 6px 0 12px; }
