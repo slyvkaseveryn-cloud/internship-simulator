@@ -31,3 +31,6 @@ docs/research.md
 
 # Metrics exports contain emails
 docs/report/data/
+
+# Team emails excluded from metrics (kept local, see scripts/metrics.py)
+scripts/exclude_emails.txt

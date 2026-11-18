@@ -52,3 +52,10 @@ def test_stub_donate_clicks_do_not_count():
 def test_automated_test_browsers_are_excluded():
     kept = metrics.clean_events([ev("opened", anon="e2e-abc123"), ev("opened", anon="0b5f8e2a-1111")], set(), set())
     assert [e["anon"] for e in kept] == ["0b5f8e2a-1111"]
+
+
+def test_exclusions_file(tmp_path):
+    f = tmp_path / "exclude.txt"
+    f.write_text("# team\nLev@Example.ORG\n\nlev2@x.org  # second\n", encoding="utf-8")
+    assert metrics.file_exclusions(f) == {"lev@example.org", "lev2@x.org"}
+    assert metrics.file_exclusions(tmp_path / "missing.txt") == set()
