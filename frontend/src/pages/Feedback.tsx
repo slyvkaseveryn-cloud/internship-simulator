@@ -66,7 +66,7 @@ export default function Feedback() {
   return (
     <form className="card form wide" onSubmit={submit}>
       <h1>Відгук</h1>
-      {c && <p className="muted">Кейс: {c.title}</p>}
+      {c ? <p className="muted">Кейс: {c.title}</p> : <p className="muted">Про сайт і кейси загалом. Можна й до того, як береш кейс.</p>}
       <label className="field">
         <span>Що сподобалось?</span>
         <textarea rows={3} maxLength={2000} value={liked} onChange={(e) => setLiked(e.target.value)} />

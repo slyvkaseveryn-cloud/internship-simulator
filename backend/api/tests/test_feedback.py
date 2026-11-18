@@ -26,3 +26,9 @@ def test_feedback_validation():
 
 def test_feedback_needs_sign_in():
     assert call("POST", "/api/feedback", body=GOOD)[0] == 401
+
+
+def test_feedback_about_a_case_without_taking_or_submitting_it(dynamo):
+    body = {"realism": 3, "wouldPay": "no", "caseId": "06-qa-test-design", "liked": "Бриф"}
+    assert call("POST", "/api/feedback", claims=STUDENT, body=body)[0] == 201
+    assert call("GET", "/api/attempts", claims=STUDENT)[1] == {"attempts": []}

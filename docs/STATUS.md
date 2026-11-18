@@ -16,7 +16,7 @@ All of this is deployed and checked end-to-end on a 375px phone viewport with th
 | Sign-up with an email code, sign-in, password reset | `/signup`, `/signin`, `/reset` |
 | Roles (coming-soon roles greyed out) → cases of a role → case page (manager's email, files, time, deadline, 20-minute first step, «Схожі тестові») | `/cases`, `/roles/:role`, `/cases/:id` |
 | «Беру кейс» → submit a link + conclusion → statuses in «Мої кейси» | case page, `/my` |
-| Feedback: liked, hindered, realism 1–5, would pay for a review (stored with email and time) | `/feedback` |
+| Feedback: liked, hindered, realism 1–5, would pay for a review (stored with email and time); works without taking a case | «Залишити відгук» in the top menu and on every case page, `/feedback` |
 | Reviewer page: queue of submissions, review form (good / fix / next) | `/review` (group `reviewers`) |
 | Student sees the review, link to rate realism, «Підтримати волонтерів» | case page after the review |
 | Funnel events and `scripts/metrics.py` (people, feedback CSV, team and test accounts excluded) | README → "Metrics for the report" |
