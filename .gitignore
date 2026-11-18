@@ -28,3 +28,6 @@ cases/*/author/
 docs/research.md
 
 .DS_Store
+
+# Metrics exports contain emails
+docs/report/data/

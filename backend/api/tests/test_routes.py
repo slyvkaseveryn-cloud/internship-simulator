@@ -48,3 +48,12 @@ def test_bad_json_is_400():
     from app.handler import handler
     r = handler({"rawPath": "/api/me", "requestContext": {"http": {"method": "GET"}}, "body": "{"}, None)
     assert r["statusCode"] == 400
+
+
+def test_public_opened_event_needs_no_sign_in(dynamo):
+    anon = "0b5f8e2a-1111-4c3d-9e8f-123456789abc"
+    assert call("POST", "/api/public/events", body={"event": "opened"}, anon=anon) == (200, {"ok": True})
+    assert events(dynamo, "opened")[0]["anon"] == anon
+    assert call("POST", "/api/public/events", body={"event": "signed_up"}, anon=anon)[0] == 400
+    assert call("POST", "/api/public/events", body={"event": "opened"})[0] == 400
+    assert call("POST", "/api/public/events", body={"event": "opened"}, anon="<script>")[0] == 400

@@ -12,7 +12,7 @@ test:
 	$(PY) -m pytest -q
 
 lint:
-	.venv/bin/ruff check backend
+	.venv/bin/ruff check backend scripts
 	cd frontend && npm run lint
 	@if command -v terraform >/dev/null; then terraform -chdir=infra fmt -check -recursive; else echo "terraform not installed: skipping (CI checks it)"; fi
 
