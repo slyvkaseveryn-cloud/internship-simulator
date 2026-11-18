@@ -92,3 +92,9 @@ fieldset.field legend { font-weight: 500; margin-bottom: 6px; padding: 0; }
 .feedback-cta { margin: 0 0 16px; }
 .donate { border-left: 4px solid var(--ok); }
 .donate p { margin: 6px 0 12px; }
+.top nav { flex-wrap: wrap; gap: 8px 16px; }
+.review { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 4px; }
+.review h4 { margin: 14px 0 4px; font-size: 15px; }
+.review p { margin: 0; }
+.review-card p { margin: 6px 0; overflow-wrap: anywhere; }
+.check { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 12px; }

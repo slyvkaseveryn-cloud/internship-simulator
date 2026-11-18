@@ -132,8 +132,11 @@ def attempt_key(sub: str, case_id: str) -> dict:
 
 def attempt_json(item: dict) -> dict:
     status = "reviewed" if item.get("review") else "submitted" if item.get("submission") else "taken"
+    review = item.get("review")
+    if review:
+        review = {k: v for k, v in review.items() if k != "reviewer"}
     return {"caseId": item["case_id"], "takenAt": item["taken_at"], "deadline": item["deadline"], "status": status,
-            "submission": item.get("submission"), "review": item.get("review")}
+            "submission": item.get("submission"), "review": review}
 
 
 def get_attempt(sub: str, case_id: str) -> dict | None:
@@ -242,3 +245,48 @@ def public_event(body, user, anon):
         raise HttpError(400, "invalid_anon")
     events.log(body["event"], anon=anon)
     return 200, {"ok": True}
+
+
+# --- reviewers: queue of submissions, writing a review -------------------------------------
+
+def require_reviewer(user):
+    user = require_user(user)
+    if "reviewers" not in user["groups"]:
+        raise HttpError(403, "forbidden")
+    return user
+
+
+@route("GET", "/api/review/submissions")
+def review_queue(body, user, anon):
+    require_reviewer(user)
+    items, kw = [], {"IndexName": "gsi1", "KeyConditionExpression": "gsi1pk = :g",
+                     "ExpressionAttributeValues": {":g": "SUBMISSION"}, "ScanIndexForward": False}
+    while True:
+        r = db.table().query(**kw)
+        items += r["Items"]
+        if "LastEvaluatedKey" not in r:
+            break
+        kw["ExclusiveStartKey"] = r["LastEvaluatedKey"]
+    titles = {cid: c["title"] for cid, c in cases.cases().items()}
+    out = [{**attempt_json(i), "userId": i["pk"].removeprefix("USER#"), "email": i.get("email", ""),
+            "caseTitle": titles.get(i["case_id"], i["case_id"])} for i in items]
+    out.sort(key=lambda a: a["status"] == "reviewed")  # waiting for a review first, newest first within
+    return 200, {"submissions": out}
+
+
+@route("POST", "/api/review/(?P<user_id>[\\w-]+)/(?P<case_id>[\\w-]+)")
+def write_review(body, user, anon, user_id, case_id):
+    reviewer = require_reviewer(user)
+    get_case(case_id)
+    item = get_attempt(user_id, case_id)
+    if not item or not item.get("submission"):
+        raise HttpError(404, "submission_not_found")
+    review = {"good": text(body, "good", 4000), "fix": text(body, "fix", 4000), "next": text(body, "next", 4000),
+              "reviewed_at": db.now(), "reviewer": reviewer["email"]}
+    first = not item.get("review")
+    db.table().update_item(Key=attempt_key(user_id, case_id), UpdateExpression="SET review = :r",
+                           ExpressionAttributeValues={":r": review})
+    # user = the student: "got a review" is a step of *their* funnel.
+    events.log("review_sent", user=user_id, case_id=case_id, value=None if first else "edited")
+    item["review"] = review
+    return 200, attempt_json(item)

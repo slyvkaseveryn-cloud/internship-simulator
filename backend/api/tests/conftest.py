@@ -21,7 +21,11 @@ def dynamo():
         boto3.client("dynamodb").create_table(
             TableName="test-table", BillingMode="PAY_PER_REQUEST",
             KeySchema=[{"AttributeName": "pk", "KeyType": "HASH"}, {"AttributeName": "sk", "KeyType": "RANGE"}],
-            AttributeDefinitions=[{"AttributeName": "pk", "AttributeType": "S"}, {"AttributeName": "sk", "AttributeType": "S"}],
+            AttributeDefinitions=[{"AttributeName": n, "AttributeType": "S"} for n in ("pk", "sk", "gsi1pk", "gsi1sk")],
+            GlobalSecondaryIndexes=[{
+                "IndexName": "gsi1", "Projection": {"ProjectionType": "ALL"},
+                "KeySchema": [{"AttributeName": "gsi1pk", "KeyType": "HASH"}, {"AttributeName": "gsi1sk", "KeyType": "RANGE"}],
+            }],
         )
         db.reset()
         yield boto3.resource("dynamodb").Table("test-table")
