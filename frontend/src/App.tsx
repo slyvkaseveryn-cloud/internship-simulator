@@ -12,6 +12,8 @@ import RoleCases from './pages/RoleCases'
 import CasePage from './pages/CasePage'
 import MyCases from './pages/MyCases'
 import Feedback from './pages/Feedback'
+import ReviewQueue from './pages/ReviewQueue'
+import { useMe } from './useMe'
 
 const guard = (el: React.ReactNode) => <RequireAuth>{el}</RequireAuth>
 
@@ -26,6 +28,7 @@ export default function App() {
             <>
               <Link to="/cases">Кейси</Link>
               <Link to="/my">Мої кейси</Link>
+              <ReviewerLink />
               <button className="link" onClick={signOut}>Вийти</button>
             </>
           ) : (
@@ -48,10 +51,16 @@ export default function App() {
           <Route path="/cases/:id" element={guard(<CasePage />)} />
           <Route path="/my" element={guard(<MyCases />)} />
           <Route path="/feedback" element={guard(<Feedback />)} />
+          <Route path="/review" element={guard(<ReviewQueue />)} />
           <Route path="/account" element={<Navigate to="/cases" replace />} />
           <Route path="*" element={<p>Сторінку не знайдено. <Link to="/">На головну</Link></p>} />
         </Routes>
       </main>
     </>
   )
+}
+
+function ReviewerLink() {
+  const { me } = useMe()
+  return me?.isReviewer ? <Link to="/review">Рев’ю</Link> : null
 }

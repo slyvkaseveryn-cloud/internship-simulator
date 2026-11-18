@@ -4,6 +4,7 @@ import { api, ApiError, post } from '../api'
 import { formatDate, STATUS_LABEL, type Attempt } from '../attempts'
 import { daysWord, type Case } from '../cases'
 import Donate from '../Donate'
+import ReviewView from '../ReviewView'
 
 /** The "take the case → submit work" block on a case page. */
 export default function CaseWork({ c, onAttempt }: { c: Case; onAttempt?: (a: Attempt | null) => void }) {
@@ -69,7 +70,15 @@ export default function CaseWork({ c, onAttempt }: { c: Case; onAttempt?: (a: At
           onCancel={editing ? () => setEditing(false) : undefined} />
       )}
 
-      {attempt.status === 'reviewed' && <Donate caseId={c.id} />}
+      {attempt.review && (
+        <>
+          <ReviewView review={attempt.review} />
+          <p className="card feedback-cta">
+            Наскільки кейс схожий на справжнє тестове? <Link to={`/feedback?case=${c.id}`}>Оціни від 1 до 5</Link>
+          </p>
+          <Donate caseId={c.id} />
+        </>
+      )}
 
       {attempt.status !== 'taken' && (
         <p className="small">
