@@ -7,6 +7,7 @@
 Needs read access to the AWS account (the owner's credentials). Excluded from every number:
   - members of the Cognito group `reviewers` (the team),
   - test accounts: emails at example.com/.org/.net, starting with `e2e-` or `test`, or containing `+test`,
+  - emails listed in scripts/exclude_emails.txt (one per line, gitignored: emails stay out of the public repo),
   - any email passed with --exclude (repeatable),
   - anonymous visits from browsers that later signed in as one of the above,
   - anonymous visits from automated test browsers (anonymous id starting with `e2e-`).
@@ -33,6 +34,17 @@ FUNNEL = [
     ("review_sent", "Got a review"),
     ("feedback_sent", "Left feedback"),
 ]
+
+EXCLUDE_FILE = Path(__file__).with_name("exclude_emails.txt")
+
+
+def file_exclusions(path: Path = EXCLUDE_FILE) -> set[str]:
+    """Team emails kept locally (not committed). Lines starting with # are comments."""
+    if not path.exists():
+        return set()
+    lines = (line.split("#", 1)[0].strip().lower() for line in path.read_text(encoding="utf-8").splitlines())
+    return {line for line in lines if line}
+
 
 TEST_EMAIL = re.compile(r"(@example\.(com|org|net)$)|(^e2e-)|(^test)|(\+test)", re.IGNORECASE)
 
@@ -137,7 +149,7 @@ def main(argv=None) -> int:
     ap.add_argument("--exclude", action="append", default=[], help="email to leave out (repeatable)")
     args = ap.parse_args(argv)
 
-    events, feedback, n_excluded = load({e.lower() for e in args.exclude})
+    events, feedback, n_excluded = load({e.lower() for e in args.exclude} | file_exclusions())
     rows = funnel(events)
 
     print(f"Funnel (people; {n_excluded} team/test accounts excluded)")

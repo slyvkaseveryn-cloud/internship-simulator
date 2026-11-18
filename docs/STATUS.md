@@ -1,18 +1,26 @@
 # Project status
 
-_Updated: 2026-11-17 · updated after every merged task_
+_Updated: 2026-11-18 · updated after every merged task_
 
 **Demo: Thursday 19.11.2026.** Each of us submits the repository link and the demo URL.
 
 ## Works now
 
+All of this is deployed and checked end-to-end on a 375px phone viewport with throwaway test accounts
+(deleted afterwards).
+
 | What | Where |
 |---|---|
 | Demo site over HTTPS | https://d174ecvpoyspb1.cloudfront.net |
+| Public home: what it is + «Зареєструватись» | `/` |
 | Sign-up with an email code, sign-in, password reset | `/signup`, `/signin`, `/reset` |
-| Account page (shows your email and whether you are a reviewer) | `/account` |
-| Case files for candidates (only `candidate/` folders) | `/cases/<id>/candidate/<file>` |
-| Reviewer role: Cognito group `reviewers` (Severyn is in it) | see README → "Give someone the reviewer role" |
+| Roles (coming-soon roles greyed out) → cases of a role → case page (manager's email, files, time, deadline, 20-minute first step, «Схожі тестові») | `/cases`, `/roles/:role`, `/cases/:id` |
+| «Беру кейс» → submit a link + conclusion → statuses in «Мої кейси» | case page, `/my` |
+| Feedback: liked, hindered, realism 1–5, would pay for a review (stored with email and time) | `/feedback` |
+| Reviewer page: queue of submissions, review form (good / fix / next) | `/review` (group `reviewers`) |
+| Student sees the review, link to rate realism, «Підтримати волонтерів» | case page after the review |
+| Funnel events and `scripts/metrics.py` (people, feedback CSV, team and test accounts excluded) | README → "Metrics for the report" |
+| Reviewers: Severyn, Lev, Danylo (Cognito group `reviewers`) | |
 | CI on every pull request, deploy on merge to `main` | GitHub → Actions |
 | Telegram bot (earlier prototype, separate data) | [@intern_sim_bot](https://t.me/intern_sim_bot) |
 
@@ -20,20 +28,20 @@ _Updated: 2026-11-17 · updated after every merged task_
 
 | Issue | Task | Owner | State |
 |---|---|---|---|
-| [#1](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/1) | Roles, case list and case page | Severyn + Claude | next |
-| [#2](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/2) | Take a case, submit a link + conclusion, statuses | Severyn + Claude | to do |
-| [#3](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/3) | Reviewer page and review form | Severyn + Claude | to do |
-| [#4](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/4) | Show the review, realism rating 1–5 with feedback | Severyn + Claude | to do |
-| [#5](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/5) | Votes for «coming soon» roles | Severyn + Claude | to do |
-| [#6](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/6) | Funnel events and metrics page | Severyn + Claude | to do |
-| [#7](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/7) | «Support volunteers» button | Severyn + Claude | to do (fund not chosen yet) |
-| [#8](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/8) | Report template and PDF build | Lev | to do (can start now) |
-| [#9](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/9) | Invite the first users (cohort) | Danylo | to do (can start now) |
-| [#10](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/10) | End-to-end check, copy review, demo script | Danylo | after #1–#4 are merged |
+| [#1](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/1) | Roles, case list and case page | Severyn + Claude | done |
+| [#2](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/2) | Take a case, submit, statuses | Severyn + Claude | done |
+| [#14](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/14) | Feedback form | Severyn + Claude | done |
+| [#6](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/6) | Funnel events and metrics | Severyn + Claude | done (a script, not a page) |
+| [#7](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/7) | «Support volunteers» button | Severyn + Claude | done, **link missing**: Severyn picks the fund |
+| [#3](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/3) | Reviewer page and review form | Severyn + Claude | done (minimal) |
+| [#4](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/4) | Show the review, realism rating | Severyn + Claude | done (rating = feedback form) |
+| [#5](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/5) | Votes for «coming soon» roles | — | not started (roles are only greyed out) |
+| [#8](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/8) | Report template and PDF build | Lev | to do; numbers from `scripts/metrics.py` |
+| [#9](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/9) | Invite the first users (cohort) | Danylo | to do; text needs Severyn's OK |
+| [#10](https://github.com/slyvkaseveryn-cloud/internship-simulator/issues/10) | End-to-end check, copy review, demo script | Danylo | can start now: the whole path works |
 
-Dependencies: the report's numbers come from #6 (metrics), so Lev can write the template and the PDF build
-first and fill numbers after people have used the site. Danylo's invitation text needs Severyn's OK before it
-is sent anywhere.
+To set the donate link: `donate_url = "https://…"` in `infra/variables.tf` (default) and merge; it reaches the
+site through `config.json` without a frontend rebuild.
 
 ## Why the report matters most
 
@@ -46,4 +54,4 @@ without users is a day of report lost. Getting real users (#9) is as important a
 ## Open questions
 
 - Charity fund for the donate button: Severyn chooses (#7 uses a placeholder until then).
-- Lev's and Danylo's emails for the `reviewers` group: after they sign up on the site.
+- Reviewers sign out and in again to see the «Рев’ю» link (the role is in the sign-in token).
