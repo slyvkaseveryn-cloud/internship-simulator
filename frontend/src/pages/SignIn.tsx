@@ -17,7 +17,8 @@ export default function SignIn() {
     setError('')
     try {
       await signIn(email.trim(), password)
-      nav('/account')
+      const next = params.get('next') ?? ''
+      nav(next.startsWith('/') && !next.startsWith('//') ? next : '/cases')
     } catch (err) {
       if (err instanceof AuthError && err.code === 'UserNotConfirmedException') {
         nav(`/confirm?email=${encodeURIComponent(email.trim())}`)
