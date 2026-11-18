@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { api, post } from '../api'
 import type { Attempt } from '../attempts'
 import { loadCases, type Case } from '../cases'
@@ -11,7 +11,13 @@ const PAY = [
   { value: 'no', label: 'Ні' },
 ]
 
+/** A fresh form on every navigation, e.g. «Залишити відгук» in the menu right after sending one. */
 export default function Feedback() {
+  const location = useLocation()
+  return <FeedbackForm key={location.key} />
+}
+
+function FeedbackForm() {
   const [params] = useSearchParams()
   const caseId = params.get('case') ?? ''
   const [c, setCase] = useState<Case | null>(null)
