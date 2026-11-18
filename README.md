@@ -1,3 +1,5 @@
+> **Status, owners and deadlines: [docs/STATUS.md](docs/STATUS.md)**
+
 # Internship Simulator
 
 A website where people starting in IT complete realistic junior **test tasks** ("cases"), get a
@@ -83,7 +85,8 @@ terraform -chdir=infra init && terraform -chdir=infra apply   # infrastructure, 
 ```
 
 One-time bootstrap, already done: `infra/bootstrap/` creates the cost budget (alert above $1 of real spend
-after credits), the Terraform state bucket and the GitHub OIDC role.
+after credits), the Terraform state bucket and the GitHub OIDC role. The role trusts only workflows on `main`
+of this repository, identified by GitHub's immutable subject (`github_sub_prefix` in `infra/bootstrap/main.tf`).
 
 ### Give someone the reviewer role
 
