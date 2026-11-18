@@ -10,6 +10,7 @@ import ResetPassword from './pages/ResetPassword'
 import Roles from './pages/Roles'
 import RoleCases from './pages/RoleCases'
 import CasePage from './pages/CasePage'
+import MyCases from './pages/MyCases'
 
 const guard = (el: React.ReactNode) => <RequireAuth>{el}</RequireAuth>
 
@@ -23,6 +24,7 @@ export default function App() {
           {signedIn ? (
             <>
               <Link to="/cases">Кейси</Link>
+              <Link to="/my">Мої кейси</Link>
               <button className="link" onClick={signOut}>Вийти</button>
             </>
           ) : (
@@ -43,6 +45,7 @@ export default function App() {
           <Route path="/cases" element={guard(<Roles />)} />
           <Route path="/roles/:role" element={guard(<RoleCases />)} />
           <Route path="/cases/:id" element={guard(<CasePage />)} />
+          <Route path="/my" element={guard(<MyCases />)} />
           <Route path="/account" element={<Navigate to="/cases" replace />} />
           <Route path="*" element={<p>Сторінку не знайдено. <Link to="/">На головну</Link></p>} />
         </Routes>

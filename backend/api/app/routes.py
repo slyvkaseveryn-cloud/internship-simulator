@@ -119,3 +119,83 @@ def client_event(body, user, anon):
         get_case(case_id)
     events.log(name, user=user["sub"], anon=anon, case_id=case_id, value=text(body, "value", 200, required=False) or None)
     return 200, {"ok": True}
+
+
+# --- attempts: take a case, submit work ------------------------------------------------
+
+URL_RE = re.compile(r"^https?://[^\s/$.?#][^\s]*$", re.IGNORECASE)
+
+
+def attempt_key(sub: str, case_id: str) -> dict:
+    return {"pk": f"USER#{sub}", "sk": f"ATTEMPT#{case_id}"}
+
+
+def attempt_json(item: dict) -> dict:
+    status = "reviewed" if item.get("review") else "submitted" if item.get("submission") else "taken"
+    return {"caseId": item["case_id"], "takenAt": item["taken_at"], "deadline": item["deadline"], "status": status,
+            "submission": item.get("submission"), "review": item.get("review")}
+
+
+def get_attempt(sub: str, case_id: str) -> dict | None:
+    return db.table().get_item(Key=attempt_key(sub, case_id)).get("Item")
+
+
+@route("POST", "/api/cases/(?P<case_id>[\\w-]+)/take")
+def take_case(body, user, anon, case_id):
+    user = require_user(user)
+    case = get_case(case_id)
+    existing = get_attempt(user["sub"], case_id)
+    if existing:
+        return 200, attempt_json(existing)
+    load_profile(user, anon)
+    now = db.now()
+    item = {**attempt_key(user["sub"], case_id), "case_id": case_id, "taken_at": now,
+            "deadline": db.plus_days(now, int(case["deadline_days"])), "email": user["email"]}
+    db.table().put_item(Item=item)
+    events.log("case_taken", user=user["sub"], case_id=case_id)
+    return 201, attempt_json(item)
+
+
+@route("GET", "/api/cases/(?P<case_id>[\\w-]+)/attempt")
+def my_attempt(body, user, anon, case_id):
+    user = require_user(user)
+    get_case(case_id)
+    item = get_attempt(user["sub"], case_id)
+    return 200, {"attempt": attempt_json(item) if item else None}
+
+
+@route("GET", "/api/attempts")
+def my_attempts(body, user, anon):
+    user = require_user(user)
+    items = db.table().query(
+        KeyConditionExpression="pk = :pk AND begins_with(sk, :a)",
+        ExpressionAttributeValues={":pk": f"USER#{user['sub']}", ":a": "ATTEMPT#"},
+    )["Items"]
+    items.sort(key=lambda i: i["taken_at"], reverse=True)
+    return 200, {"attempts": [attempt_json(i) for i in items]}
+
+
+@route("POST", "/api/cases/(?P<case_id>[\\w-]+)/submit")
+def submit(body, user, anon, case_id):
+    user = require_user(user)
+    get_case(case_id)
+    item = get_attempt(user["sub"], case_id)
+    if not item:
+        raise HttpError(409, "case_not_taken")
+    if item.get("review"):
+        raise HttpError(409, "already_reviewed")
+    link = text(body, "link", 500)
+    if not URL_RE.match(link):
+        raise HttpError(400, "invalid_link")
+    conclusion = text(body, "conclusion", 2000)
+    first = not item.get("submission")
+    submission = {"link": link, "conclusion": conclusion, "submitted_at": db.now()}
+    # gsi1 is a sparse index: only submitted attempts appear in the reviewers' queue.
+    db.table().update_item(
+        Key=attempt_key(user["sub"], case_id),
+        UpdateExpression="SET submission = :s, gsi1pk = :g, gsi1sk = :t",
+        ExpressionAttributeValues={":s": submission, ":g": "SUBMISSION", ":t": submission["submitted_at"]},
+    )
+    events.log("submitted", user=user["sub"], case_id=case_id, value=None if first else "resubmitted")
+    item["submission"] = submission
+    return 200, attempt_json(item)

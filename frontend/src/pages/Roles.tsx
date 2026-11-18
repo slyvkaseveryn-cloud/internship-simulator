@@ -21,14 +21,15 @@ export default function Roles() {
   }, [])
 
   async function choose(p: Profession) {
-    nav(`/roles/${p.id}`)
-    if (me?.profession === p.id) return
-    try {
-      const r = await put<{ profession: string }>('/me/profession', { profession: p.id })
-      if (me) setMe({ ...me, profession: r.profession })
-    } catch {
-      /* the page still works; the choice is saved next time */
+    if (me?.profession !== p.id) {
+      try {
+        const r = await put<{ profession: string }>('/me/profession', { profession: p.id })
+        if (me) setMe({ ...me, profession: r.profession })
+      } catch {
+        /* the list still opens; the choice is saved next time */
+      }
     }
+    nav(`/roles/${p.id}`)
   }
 
   const live = profs.filter((p) => p.status === 'live')
