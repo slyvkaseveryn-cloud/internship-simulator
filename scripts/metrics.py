@@ -8,7 +8,8 @@ Needs read access to the AWS account (the owner's credentials). Excluded from ev
   - members of the Cognito group `reviewers` (the team),
   - test accounts: emails at example.com/.org/.net, starting with `e2e-` or `test`, or containing `+test`,
   - any email passed with --exclude (repeatable),
-  - anonymous visits from browsers that later signed in as one of the above.
+  - anonymous visits from browsers that later signed in as one of the above,
+  - anonymous visits from automated test browsers (anonymous id starting with `e2e-`).
 """
 import argparse
 import csv
@@ -58,7 +59,8 @@ def clean_events(events: list[dict], subs: set[str], anons: set[str]) -> list[di
 
     review_sent is written with user = the student who got the review, so it is kept for real students.
     """
-    return [e for e in events if e.get("user") not in subs and not (e.get("anon") and e.get("anon") in anons)]
+    return [e for e in events if e.get("user") not in subs and not (e.get("anon") and e.get("anon") in anons)
+            and not str(e.get("anon") or "").startswith("e2e-")]
 
 
 def funnel(events: list[dict]) -> list[tuple[str, str, int]]:
