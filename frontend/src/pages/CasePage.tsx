@@ -32,7 +32,10 @@ export default function CasePage() {
 
       <div className="facts">
         <div><span className="muted">Час</span><b>{c.time_estimate}</b></div>
-        <div><span className="muted">Дедлайн</span><b>{daysWord(c.deadline_days)}</b></div>
+        <div className="deadline">
+          <span className="muted">Дедлайн</span><b>{daysWord(c.deadline_days)}</b>
+          <small>Не встиг? Нічого не заблокується: здати можна й пізніше, рев'ю буде так само.</small>
+        </div>
         <div><span className="muted">Інструменти</span><b>{c.tools}</b></div>
       </div>
 

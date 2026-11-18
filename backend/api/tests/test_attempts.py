@@ -1,4 +1,4 @@
-from helpers import STUDENT, call, events
+from helpers import REVIEWER, STUDENT, call, events
 
 CASE = "05-qa-checkout"
 OTHER = {"sub": "u-other", "email": "other@example.org", "cognito:groups": ""}
@@ -27,6 +27,17 @@ def test_submit_and_resubmit(dynamo):
     call("POST", f"/api/cases/{CASE}/submit", claims=STUDENT, body={**WORK, "conclusion": "Оновлений висновок"})
     assert call("GET", f"/api/cases/{CASE}/attempt", claims=STUDENT)[1]["attempt"]["submission"]["conclusion"] == "Оновлений висновок"
     assert [e.get("value") for e in events(dynamo, "submitted")] == [None, "resubmitted"]
+
+
+def test_late_submission_is_accepted_and_reaches_the_review_queue(dynamo):
+    """The case page promises: missing the deadline blocks nothing, review happens as usual."""
+    call("POST", f"/api/cases/{CASE}/take", claims=STUDENT)
+    dynamo.update_item(Key={"pk": f"USER#{STUDENT['sub']}", "sk": f"ATTEMPT#{CASE}"},
+                       UpdateExpression="SET deadline = :d", ExpressionAttributeValues={":d": "2020-01-01T00:00:00Z"})
+    status, a = call("POST", f"/api/cases/{CASE}/submit", claims=STUDENT, body=WORK)
+    assert status == 200 and a["status"] == "submitted"
+    queue = call("GET", "/api/review/submissions", claims=REVIEWER)[1]
+    assert CASE in str(queue)
 
 
 def test_submission_validation():

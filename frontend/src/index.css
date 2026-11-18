@@ -57,6 +57,11 @@ h2 { margin-top: 32px; font-size: 20px; }
 .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
 .facts div { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
 .facts .muted { font-size: 13px; }
+.facts .deadline small { color: var(--ink-2); font-size: 13px; line-height: 1.35; margin-top: 4px; }
+.field.tone { border-left: 4px solid; border-radius: 4px; padding: 4px 0 4px 12px; }
+.field.tone.good { border-color: var(--ok); }
+.field.tone.bad { border-color: #d9a400; }
+.field.tone textarea::placeholder { color: var(--ink-2); opacity: .8; }
 .case .card { margin: 12px 0; }
 .similar p, .first-step p { margin: 8px 0 0; }
 .first-step { border-left: 4px solid var(--accent); }

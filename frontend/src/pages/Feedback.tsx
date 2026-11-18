@@ -73,13 +73,17 @@ function FeedbackForm() {
     <form className="card form wide" onSubmit={submit}>
       <h1>Відгук</h1>
       {c ? <p className="muted">Кейс: {c.title}</p> : <p className="muted">Про сайт і кейси загалом. Можна й до того, як береш кейс.</p>}
-      <label className="field">
-        <span>Що сподобалось?</span>
-        <textarea rows={3} maxLength={2000} value={liked} onChange={(e) => setLiked(e.target.value)} />
+      <label className="field tone good">
+        <span>👍 Що сподобалось?</span>
+        <small>Що варто залишити як є.</small>
+        <textarea rows={3} maxLength={2000} value={liked} onChange={(e) => setLiked(e.target.value)}
+          placeholder="Напр.: лист схожий на справжній, зрозуміло, що здавати." />
       </label>
-      <label className="field">
-        <span>Що заважало?</span>
-        <textarea rows={3} maxLength={2000} value={hindered} onChange={(e) => setHindered(e.target.value)} />
+      <label className="field tone bad">
+        <span>👎 Що заважало або було незрозуміло?</span>
+        <small>Де застряг, що злякало, чого забракло.</small>
+        <textarea rows={3} maxLength={2000} value={hindered} onChange={(e) => setHindered(e.target.value)}
+          placeholder="Напр.: не знав, як здати роботу посиланням; незнайомий термін «когорти»." />
       </label>
       <fieldset className="field">
         <legend>Наскільки це схоже на справжнє тестове завдання?</legend>

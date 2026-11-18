@@ -36,7 +36,8 @@ export default function CaseWork({ c, onAttempt }: { c: Case; onAttempt?: (a: At
   if (attempt === null) {
     return (
       <div className="card take">
-        <p>Після «Беру кейс» почнеться відлік: {daysWord(c.deadline_days)}, щоб здати роботу.</p>
+        <p>Умову, лист і файли нижче видно й без цього, читай скільки треба.</p>
+        <p className="small muted">Таймер ({daysWord(c.deadline_days)} на здачу) стартує тільки після натискання «Беру кейс».</p>
         <button className="btn" onClick={take}>Беру кейс</button>
         {error && <p className="error">{error}</p>}
       </div>
