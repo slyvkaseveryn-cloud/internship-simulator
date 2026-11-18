@@ -21,6 +21,9 @@ export default function MyCases() {
   return (
     <section>
       <h1>Мої кейси</h1>
+      {attempts.some((a) => a.status !== 'taken') && (
+        <p className="card feedback-cta">Як тобі кейс? <Link to="/feedback">Залиш відгук</Link>: це 2 хвилини.</p>
+      )}
       {attempts.length === 0 && <p>Тут поки порожньо. <Link to="/cases">Обрати кейс</Link></p>}
       <div className="list">
         {attempts.map((a) => (

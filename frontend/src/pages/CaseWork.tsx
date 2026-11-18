@@ -69,7 +69,9 @@ export default function CaseWork({ c, onAttempt }: { c: Case; onAttempt?: (a: At
       )}
 
       {attempt.status !== 'taken' && (
-        <p className="small"><Link to="/my">Усі мої кейси</Link></p>
+        <p className="small">
+          <Link to={`/feedback?case=${c.id}`}>Залишити відгук про кейс</Link> · <Link to="/my">Усі мої кейси</Link>
+        </p>
       )}
     </div>
   )

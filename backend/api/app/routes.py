@@ -199,3 +199,31 @@ def submit(body, user, anon, case_id):
     events.log("submitted", user=user["sub"], case_id=case_id, value=None if first else "resubmitted")
     item["submission"] = submission
     return 200, attempt_json(item)
+
+
+# --- feedback from users (source of quotes and numbers for the report) -------------------
+
+WOULD_PAY = {"yes", "maybe", "no"}
+
+
+@route("POST", "/api/feedback")
+def feedback(body, user, anon):
+    user = require_user(user)
+    realism = body.get("realism")
+    if not isinstance(realism, int) or isinstance(realism, bool) or not 1 <= realism <= 5:
+        raise HttpError(400, "invalid_realism")
+    would_pay = body.get("wouldPay")
+    if would_pay not in WOULD_PAY:
+        raise HttpError(400, "invalid_wouldPay")
+    case_id = body.get("caseId") or None
+    if case_id:
+        get_case(case_id)
+    ts = db.now()
+    item = {"pk": "FEEDBACK", "sk": f"{db.now_precise()}#{user['sub']}", "ts": ts, "sub": user["sub"],
+            "email": user["email"], "realism": realism, "would_pay": would_pay,
+            "liked": text(body, "liked", 2000, required=False), "hindered": text(body, "hindered", 2000, required=False)}
+    if case_id:
+        item["case_id"] = case_id
+    db.table().put_item(Item=item)
+    events.log("feedback_sent", user=user["sub"], case_id=case_id, value=str(realism))
+    return 201, {"ok": True}

@@ -11,6 +11,7 @@ import Roles from './pages/Roles'
 import RoleCases from './pages/RoleCases'
 import CasePage from './pages/CasePage'
 import MyCases from './pages/MyCases'
+import Feedback from './pages/Feedback'
 
 const guard = (el: React.ReactNode) => <RequireAuth>{el}</RequireAuth>
 
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/roles/:role" element={guard(<RoleCases />)} />
           <Route path="/cases/:id" element={guard(<CasePage />)} />
           <Route path="/my" element={guard(<MyCases />)} />
+          <Route path="/feedback" element={guard(<Feedback />)} />
           <Route path="/account" element={<Navigate to="/cases" replace />} />
           <Route path="*" element={<p>Сторінку не знайдено. <Link to="/">На головну</Link></p>} />
         </Routes>
