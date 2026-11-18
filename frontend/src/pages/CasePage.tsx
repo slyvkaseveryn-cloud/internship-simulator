@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { track } from '../api'
 import { daysWord, fileUrl, loadBrief, loadCases, type Case } from '../cases'
+import CaseWork from './CaseWork'
 
 export default function CasePage() {
   const { id } = useParams()
@@ -34,6 +35,8 @@ export default function CasePage() {
         <div><span className="muted">Дедлайн</span><b>{daysWord(c.deadline_days)}</b></div>
         <div><span className="muted">Інструменти</span><b>{c.tools}</b></div>
       </div>
+
+      <CaseWork c={c} />
 
       <div className="card similar">
         <span className="chip">Схожі тестові</span>

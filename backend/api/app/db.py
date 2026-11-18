@@ -2,13 +2,14 @@
 
 Items (pk / sk):
   USER#<sub>  / PROFILE            email, name, profession, anon_id, created_at
-  USER#<sub>  / ATTEMPT#<case_id>  taken_at, deadline, submission, review
+  USER#<sub>  / ATTEMPT#<case_id>  case_id, email, taken_at, deadline, submission, review
+                                    (+ gsi1pk=SUBMISSION, gsi1sk=submitted_at once submitted)
   EVENT       / <ts>#<id>          user, anon, event, case_id, value
   FEEDBACK    / <ts>#<sub>         email, case_id, liked, hindered, realism, would_pay
 """
 import os
 import uuid
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import boto3
 
@@ -30,6 +31,11 @@ def reset() -> None:
 
 def now() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def plus_days(ts: str, days: int) -> str:
+    t = datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ") + timedelta(days=days)
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def new_id() -> str:

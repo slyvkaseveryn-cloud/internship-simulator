@@ -69,3 +69,15 @@ h2 { margin-top: 32px; font-size: 20px; }
 details summary { cursor: pointer; font-weight: 600; }
 details { overflow-wrap: anywhere; }
 pre, code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.status-card .status-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+.chip.status-taken { background: color-mix(in srgb, #d9a400 22%, transparent); }
+.chip.status-submitted { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.chip.status-reviewed { background: color-mix(in srgb, var(--ok) 22%, transparent); }
+.form-inline { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.form-inline h3 { margin: 4px 0 0; }
+.field textarea { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+.confirm { background: var(--bg); border-radius: 10px; padding: 12px; }
+.confirm p { margin: 0 0 8px; }
+.pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.submission a { overflow-wrap: anywhere; }
+.take p { margin-top: 0; }
