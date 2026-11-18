@@ -27,7 +27,7 @@ def current_user(event: dict) -> dict | None:
     groups = claims.get("cognito:groups") or ""
     # API Gateway passes list claims as "[a b]"
     groups = groups.strip("[]").replace(",", " ").split() if isinstance(groups, str) else list(groups)
-    return {"sub": claims["sub"], "email": claims.get("email", ""), "groups": groups}
+    return {"sub": claims["sub"], "email": claims.get("email", ""), "name": claims.get("name", ""), "groups": groups}
 
 
 def handler(event, context):
@@ -40,7 +40,8 @@ def handler(event, context):
         except ValueError:
             return response(400, {"error": "invalid_json"})
     try:
-        status, payload = routes.dispatch(method, path, body, current_user(event))
+        anon = (event.get("headers") or {}).get("x-anon-id", "")[:64] or None
+        status, payload = routes.dispatch(method, path, body, current_user(event), anon)
     except routes.HttpError as e:
         status, payload = e.status, {"error": e.code}
     except Exception:

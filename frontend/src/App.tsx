@@ -1,15 +1,20 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom'
 import { signOut } from './auth'
 import { useAuth } from './useAuth'
+import RequireAuth from './RequireAuth'
 import Home from './pages/Home'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import Confirm from './pages/Confirm'
 import ResetPassword from './pages/ResetPassword'
-import Account from './pages/Account'
+import Roles from './pages/Roles'
+import RoleCases from './pages/RoleCases'
+import CasePage from './pages/CasePage'
+
+const guard = (el: React.ReactNode) => <RequireAuth>{el}</RequireAuth>
 
 export default function App() {
-  const { signedIn, claims } = useAuth()
+  const { signedIn } = useAuth()
   return (
     <>
       <header className="top">
@@ -17,7 +22,7 @@ export default function App() {
         <nav>
           {signedIn ? (
             <>
-              <Link to="/account">{claims?.name || claims?.email || 'Кабінет'}</Link>
+              <Link to="/cases">Кейси</Link>
               <button className="link" onClick={signOut}>Вийти</button>
             </>
           ) : (
@@ -35,7 +40,10 @@ export default function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/confirm" element={<Confirm />} />
           <Route path="/reset" element={<ResetPassword />} />
-          <Route path="/account" element={signedIn ? <Account /> : <Navigate to="/signin" replace />} />
+          <Route path="/cases" element={guard(<Roles />)} />
+          <Route path="/roles/:role" element={guard(<RoleCases />)} />
+          <Route path="/cases/:id" element={guard(<CasePage />)} />
+          <Route path="/account" element={<Navigate to="/cases" replace />} />
           <Route path="*" element={<p>Сторінку не знайдено. <Link to="/">На головну</Link></p>} />
         </Routes>
       </main>
