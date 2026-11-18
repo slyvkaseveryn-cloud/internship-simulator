@@ -8,8 +8,7 @@ PUBLIC_EVENTS = {"opened"}
 
 def log(event: str, user: str | None = None, anon: str | None = None, case_id: str | None = None,
         value: str | None = None) -> None:
-    ts = db.now()
-    item = {"pk": "EVENT", "sk": f"{ts}#{db.new_id()}", "ts": ts, "event": event}
+    item = {"pk": "EVENT", "sk": f"{db.now_precise()}#{db.new_id()}", "ts": db.now(), "event": event}
     for key, val in (("user", user), ("anon", anon), ("case_id", case_id), ("value", value)):
         if val:
             item[key] = val

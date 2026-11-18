@@ -33,6 +33,11 @@ def now() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def now_precise() -> str:
+    """Sort key for items written in quick succession (events): microseconds keep their order."""
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+
 def plus_days(ts: str, days: int) -> str:
     t = datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ") + timedelta(days=days)
     return t.strftime("%Y-%m-%dT%H:%M:%SZ")
