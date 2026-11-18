@@ -36,6 +36,8 @@ export default function CasePage() {
         <div><span className="muted">Інструменти</span><b>{c.tools}</b></div>
       </div>
 
+      <Link to={`/feedback?case=${c.id}`} className="btn ghost feedback-case">Залишити відгук про кейс</Link>
+
       <CaseWork c={c} />
 
       <div className="card similar">

@@ -29,6 +29,7 @@ export default function App() {
               <Link to="/cases">Кейси</Link>
               <Link to="/my">Мої кейси</Link>
               <ReviewerLink />
+              <Link to="/feedback" className="btn small feedback-btn">Залишити відгук</Link>
               <button className="link" onClick={signOut}>Вийти</button>
             </>
           ) : (

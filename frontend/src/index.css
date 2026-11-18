@@ -98,3 +98,5 @@ fieldset.field legend { font-weight: 500; margin-bottom: 6px; padding: 0; }
 .review p { margin: 0; }
 .review-card p { margin: 6px 0; overflow-wrap: anywhere; }
 .check { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.feedback-btn { white-space: nowrap; }
+.feedback-case { display: block; text-align: center; margin: 0 0 12px; }
