@@ -47,3 +47,8 @@ def test_funnel_counts_people_not_events():
 def test_stub_donate_clicks_do_not_count():
     events = [ev("donate_clicked", "u1", value="stub"), ev("donate_clicked", "u2")]
     assert metrics.summary(events, [])["donate_clicks_people"] == 1
+
+
+def test_automated_test_browsers_are_excluded():
+    kept = metrics.clean_events([ev("opened", anon="e2e-abc123"), ev("opened", anon="0b5f8e2a-1111")], set(), set())
+    assert [e["anon"] for e in kept] == ["0b5f8e2a-1111"]
