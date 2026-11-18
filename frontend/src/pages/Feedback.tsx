@@ -1,7 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { post } from '../api'
+import { api, post } from '../api'
+import type { Attempt } from '../attempts'
 import { loadCases, type Case } from '../cases'
+import Donate from '../Donate'
 
 const PAY = [
   { value: 'yes', label: 'Так' },
@@ -20,6 +22,13 @@ export default function Feedback() {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [sent, setSent] = useState(false)
+  const [reviewed, setReviewed] = useState(false)
+
+  useEffect(() => {
+    api<{ attempts: Attempt[] }>('/attempts')
+      .then((r) => setReviewed(r.attempts.some((a) => a.status === 'reviewed')))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     if (caseId) loadCases().then((all) => setCase(all.find((x) => x.id === caseId) ?? null)).catch(() => {})
@@ -49,6 +58,7 @@ export default function Feedback() {
         <h1>Дякуємо!</h1>
         <p>Твій відгук допоможе зробити кейси ближчими до справжніх тестових.</p>
         <p><Link to="/my">До моїх кейсів</Link></p>
+        {reviewed && <Donate caseId={c?.id} />}
       </section>
     )
   }
